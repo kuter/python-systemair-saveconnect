@@ -16,6 +16,7 @@ dependencies = [
     "httpx",
     "pydantic",
     "importlib-metadata"
+    "websockets"
 ]
 dynamic = ["version", "readme"]
 
