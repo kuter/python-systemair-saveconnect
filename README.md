@@ -42,10 +42,10 @@ finally:
     loop.close()
 
 obj = SaveConnectGraphQL(api)
-obj.set_access_token(sc.auth.token)
+obj.set_access_token(api.auth.token)
 
 url = obj.api_url
-token = sc.auth.token
+token = api.auth.token["access_token"]
 
 
 query = """
@@ -87,8 +87,8 @@ headers = {
     "content-type": "application/json",
     "x-access-token": token
 }
-print(headers)
 response = requests.post(url, headers=headers, json=dict(query=query))
+pprint(response.json())
 
 # # Refresh Token
 # await sc.auth.refresh_token()
@@ -97,7 +97,6 @@ response = requests.post(url, headers=headers, json=dict(query=query))
 # device_0 = devices[0]["identifier"]
 #
 # device_0_data = await sc.read_data(device_id=device_0)
-
 ```
 
 # Version History
