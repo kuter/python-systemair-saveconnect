@@ -95,62 +95,40 @@ class SaveConnectGraphQL:
         )
         return success
 
-    async def queryGetAccount(self) -> typing.List['SaveConnectDevice']:
+    async def queryGetAccountDevices(self) -> typing.List['SaveConnectDevice']:
         query = """
-            {
-              GetAccount {
-                email
-                firstName
-                lastName
-                city
-                country
-                locale
-                phoneNumber
-                street
-                role
-                zipCode
-                permissions
-                exists
-                disabled
-                devices {
-                  name
-                  identifier
-                  connectionStatus
-                  startupWizardRequired
-                  updateInProgress
-                  units {
-                    temperature
-                    pressure
-                    flow
-                  }
-                  street
-                  zipcode
-                  city
-                  country
-                  serviceLocked
-                  filterLocked
-                  weekScheduleLocked
-                  hasAlarms
-                }
-                notifications {
-                  id
-                  title
-                  description
-                  type
-                  unread
-                  email
-                  properties
-                  createdAt
-                }
-                company {
-                  companyName
-                  referenceEmail
-                  referenceName
-                  responsiblePerson
-                  responsiblePersonPhoneNumber
-                }
+        {
+          GetAccountDevices {
+            identifier
+            name
+            street
+            zipcode
+            city
+            country
+            deviceType {
+              entry
+              module
+              scope
+              type
+            }
+            status {
+              connectionStatus
+              serialNumber
+              model
+              startupWizardRequired
+              updateInProgress
+              filterLocked
+              weekScheduleLocked
+              serviceLocked
+              hasAlarms
+              units {
+                temperature
+                pressure
+                flow
               }
             }
+          }
+        }
         """
 
         response_data = await self.post_request(
@@ -163,7 +141,8 @@ class SaveConnectGraphQL:
             _LOGGER.error("No data from the API")
             return []
 
-        for device_data in response_data["GetAccount"]["devices"]:
+        for device_data in response_data["GetAccountDevices"]:
+            device_data.update(device_data["status"])
             self.api.data.update_device(device_data=device_data)
 
         return list(self.api.data.devices.values())

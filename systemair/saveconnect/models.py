@@ -44,8 +44,8 @@ class SaveConnectDevice(BaseModel):
     name: str
     identifier: str
     connectionStatus: str
-    startupWizardRequired: str = None
-    updateInProgress: str = None
+    startupWizardRequired: bool = None
+    updateInProgress: bool = None
     street: str = None
     zipcode: int = None
     city: str = None
@@ -57,7 +57,7 @@ class SaveConnectDevice(BaseModel):
     units: SaveConnectDeviceUnits
     registry: 'SaveConnectRegistry' = None
 
-    cb = []
+    cb: list  = []
 
     async def update(self, api):
         return await api.read_data(self)
